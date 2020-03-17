@@ -1,5 +1,6 @@
 package com.example.minisportapp
 
+import com.google.gson.Gson
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert
 import org.junit.Test
@@ -42,7 +43,7 @@ class SportAppDataTest {
                 "  }\n" +
                 "}"
 
-        val actual = parseSportData(testData)
+        val actual = Parser().parseSportData(Gson(), testData)
         val expected = SportData(
             Data(
                 Topic(

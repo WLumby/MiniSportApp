@@ -21,6 +21,7 @@ class SportAdapter(private val dataset: SportData) :
             holder.tile.getViewById(R.id.tile_title).tile_title.text = dataset.data.items[position].title
             holder.tile.getViewById(R.id.tile_time).tile_time.text = dataset.data.items[position].lastUpdatedText
             holder.tile.getViewById(R.id.tile_title).tag = position
+            holder.tile.getViewById(R.id.tile_image).contentDescription = dataset.data.items[position].image.altText
             Picasso.get().load(dataset.data.items[position].image.medium).into(holder.tile.getViewById(R.id.tile_image).tile_image);
         }
 

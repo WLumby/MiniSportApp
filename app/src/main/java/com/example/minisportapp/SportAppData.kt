@@ -1,16 +1,5 @@
 package com.example.minisportapp
 
-import com.google.gson.Gson
-
-/**
- * Function to unmarshal raw string data into SportData structure and return it
- */
-fun parseSportData(data: String): SportData {
-    // Create a gson object and use it to unmarshal the raw json
-    val gson = Gson()
-    return gson.fromJson(data, SportData::class.java)
-}
-
 data class SportData(
     val data: Data
 )
