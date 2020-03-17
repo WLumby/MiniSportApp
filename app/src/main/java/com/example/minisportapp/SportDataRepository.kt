@@ -3,11 +3,11 @@ package com.example.minisportapp
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 
-class SportDataRepository {
+class SportDataRepository(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val parser: Parser, private val gson: Gson) {
     /**
      * Function to get and parse sport data from the data endpoint
      */
-    fun getAndParseSportData(wrapper: HTTPWrapper, httpClient: OkHttpClient, parser: Parser, gson: Gson): SportData? {
+    fun getAndParseSportData(): SportData? {
         val rawData: String
 
         try {

@@ -38,14 +38,14 @@ class MainActivity : AppCompatActivity() {
         val wrapper = HTTPWrapper()
         val parser = Parser()
         val statsManager = Stats()
-        val sportDataRepository = SportDataRepository()
+        val sportDataRepository = SportDataRepository(wrapper, OkHttpClient(), parser, Gson())
 
         notificationWrapper.createNotificationChannel(
             this.applicationContext,
             "minisport.channel.id"
         )
 
-        val parsedData = sportDataRepository.getAndParseSportData(wrapper, OkHttpClient(), parser, Gson()) ?: return
+        val parsedData = sportDataRepository.getAndParseSportData() ?: return
         sportData = parsedData
 
         createRandomNotification(this.applicationContext, notificationWrapper, 60000, 60000)
