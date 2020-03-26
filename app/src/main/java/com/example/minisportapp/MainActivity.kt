@@ -35,10 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun createHomepage() {
         val notificationWrapper = NotificationWrapper()
-        val wrapper = HTTPWrapper()
-        val parser = Parser()
         val statsManager = Stats()
-        val sportDataRepository = SportDataRepository(wrapper, OkHttpClient(), parser, Gson())
+        val sportDataRepository = SportDataRepositoryFactory.create()
 
         notificationWrapper.createNotificationChannel(
             this.applicationContext,
