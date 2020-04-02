@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnSPortDataResultListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -29,22 +29,44 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        threadPermitAll()
         createHomepage()
     }
 
     private fun createHomepage() {
+        val sportDataRepository = SportDataRepositoryFactory.create()
+        sportDataRepository.listener = this
+        sportDataRepository.getAndParseSportData()
+    }
+
+    /**
+     * Function to create and schedule a random story notification
+     */
+    private fun createRandomNotification(context: Context, notificationWrapper: NotificationWrapper, delay: Long, period: Long) {
+        val notificationTask = NotificationTimerTask(notificationWrapper, sportData, context)
+        Timer().schedule(notificationTask, delay, period)
+    }
+
+    /**
+     * Click handler for sport stories
+     * Starts new activity with intent of clicked story
+     */
+    fun onStoryClick(view: View) {
+        val serialisedItem = Gson().toJson(sportData.data.items[view.tag as Int])
+
+        val intent = Intent(this, DisplayStoryActivity::class.java).apply {
+            putExtra("com.minisportapp.storydata", serialisedItem)
+        }
+        startActivity(intent)
+    }
+
+    override fun onResult(sportData: SportData) {
         val notificationWrapper = NotificationWrapper()
         val statsManager = Stats()
-        val sportDataRepository = SportDataRepositoryFactory.create()
 
         notificationWrapper.createNotificationChannel(
             this.applicationContext,
             "minisport.channel.id"
         )
-
-        val parsedData = sportDataRepository.getAndParseSportData() ?: return
-        sportData = parsedData
 
         createRandomNotification(this.applicationContext, notificationWrapper, 60000, 60000)
 
@@ -71,38 +93,6 @@ class MainActivity : AppCompatActivity() {
             "data",
             System.currentTimeMillis().toString()
         )
-    }
-
-    /**
-     * Function to create and schedule a random story notification
-     */
-    private fun createRandomNotification(context: Context, notificationWrapper: NotificationWrapper, delay: Long, period: Long) {
-        val notificationTask = NotificationTimerTask(notificationWrapper, sportData, context)
-        Timer().schedule(notificationTask, delay, period)
-    }
-
-
-
-    /**
-     * Function to permit all for thread policy
-     */
-    private fun threadPermitAll() {
-        val policy = StrictMode.ThreadPolicy.Builder()
-            .permitAll().build()
-        StrictMode.setThreadPolicy(policy)
-    }
-
-    /**
-     * Click handler for sport stories
-     * Starts new activity with intent of clicked story
-     */
-    fun onStoryClick(view: View) {
-        val serialisedItem = Gson().toJson(sportData.data.items[view.tag as Int])
-
-        val intent = Intent(this, DisplayStoryActivity::class.java).apply {
-            putExtra("com.minisportapp.storydata", serialisedItem)
-        }
-        startActivity(intent)
     }
 }
 
