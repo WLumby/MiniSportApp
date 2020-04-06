@@ -1,7 +1,5 @@
 local.properties
 .idea
-.gradle/5.6.4/fileHashes/fileHashes.bin
-.gradle/5.6.4/fileHashes/fileHashes.lock
-.gradle/buildOutputCleanup/buildOutputCleanup.lock
-.gradle/buildOutputCleanup/outputFiles.bin
+.gradle
+build
 app/app.iml
