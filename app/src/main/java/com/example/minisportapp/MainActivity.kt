@@ -4,8 +4,6 @@ package com.example.minisportapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.StrictMode
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,7 +14,7 @@ import okhttp3.OkHttpClient
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), OnSPortDataResultListener {
+class MainActivity : AppCompatActivity(), OnSportDataResultListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -35,7 +33,7 @@ class MainActivity : AppCompatActivity(), OnSPortDataResultListener {
     private fun createHomepage() {
         val sportDataRepository = SportDataRepositoryFactory.create()
         sportDataRepository.listener = this
-        sportDataRepository.getAndParseSportData()
+        sportDataRepository.getAndParseSportData("https://bbc.github.io/sport-app-dev-tech-challenge/data.json")
     }
 
     /**

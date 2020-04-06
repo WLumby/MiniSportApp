@@ -3,22 +3,44 @@ package com.example.minisportapp
 import android.os.AsyncTask
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
-import java.net.URL
 
-interface OnSPortDataResultListener {
+interface OnSportDataResultListener {
     fun onResult(sportData: SportData)
 }
 
-class SportDataRepository(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val parser: Parser, private val gson: Gson) {
+class DownloadFilesTaskFactory {
+    fun createDownloadFilesTask(wrapper: HTTPWrapper, httpClient: OkHttpClient, onResult: (String?) -> Unit) : DownloadFilesTask {
+        return DownloadFilesTask(wrapper, httpClient, onResult)
+    }
+}
 
-    var listener: OnSPortDataResultListener? = null
+class DownloadFilesTask(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val onResult: (String?) -> Unit) : AsyncTask<String, Int, String?>() {
+    override fun doInBackground(vararg url: String): String? {
+        return try {
+            wrapper.getRawData(
+                httpClient,
+                url.get(0)
+            )
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override fun onPostExecute(result: String?) {
+        onResult(result)
+    }
+}
+
+class SportDataRepository(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val parser: Parser, private val gson: Gson, private val taskFactory: DownloadFilesTaskFactory) {
+
+    var listener: OnSportDataResultListener? = null
 
     /**
      * Function to get and parse sport data from the data endpoint
      */
-    fun getAndParseSportData() {
-        val task = DownloadFilesTask(wrapper, httpClient)
-        task.execute("https://bbc.github.io/sport-app-dev-tech-challenge/data.json")
+    fun getAndParseSportData(url: String) {
+        val task = taskFactory.createDownloadFilesTask(wrapper, httpClient, ::onResult)
+        task.execute(url)
     }
 
     fun onResult(result: String?) {
@@ -27,23 +49,6 @@ class SportDataRepository(private val wrapper: HTTPWrapper, private val httpClie
                 gson,
                 it
             ))
-        }
-    }
-
-    inner class DownloadFilesTask(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient) : AsyncTask<String, Int, String?>() {
-        override fun doInBackground(vararg url: String): String? {
-            return try {
-                wrapper.getRawData(
-                    httpClient,
-                    url.get(0)
-                )
-            } catch (e: Exception) {
-                null
-            }
-        }
-
-        override fun onPostExecute(result: String?) {
-            onResult(result)
         }
     }
 }

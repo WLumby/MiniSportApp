@@ -7,6 +7,8 @@ object SportDataRepositoryFactory {
     fun create() : SportDataRepository {
         val wrapper = HTTPWrapper()
         val parser = Parser()
-        return SportDataRepository(wrapper, OkHttpClient(), parser, Gson())
+        val factory = DownloadFilesTaskFactory()
+
+        return SportDataRepository(wrapper, OkHttpClient(), parser, Gson(), factory)
     }
 }
