@@ -1,9 +1,6 @@
 package com.example.minisportapp
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Test
 
@@ -23,8 +20,12 @@ class SportDataTest {
         val url = "https://bbc.github.io/sport-app-dev-tech-challenge/data.json"
         sportDataRepository.getAndParseSportData(url)
         verify(mockDownloadFilesTask).execute(url)
+        val captor = argumentCaptor<(String?) -> Unit>()
+        verify(mockFactory).createDownloadFilesTask(any(), any(), captor.capture())
+        captor.firstValue.invoke("blah")
 
         // Then: data should be presented to view
-        verify(mockOnSportDataResultListener).onResult(any())
+        val expectedData: SportData = mock()
+        verify(mockOnSportDataResultListener).onResult(expectedData)
     }
 }
