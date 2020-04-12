@@ -1,12 +1,13 @@
 package com.example.minisportapp
 
+import com.example.minisportapp.repository.*
 import com.google.gson.Gson
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert
 import org.junit.Test
 
 
-class SportAppDataTest {
+class SportDataParserTest {
     /**
      * This test asserts that the correctly structured json data is returned
      * when this function is called
@@ -43,7 +44,8 @@ class SportAppDataTest {
                 "  }\n" +
                 "}"
 
-        val actual = Parser().parseSportData(Gson(), testData)
+        val actual = Parser(Gson())
+            .parseSportData(testData)
         val expected = SportData(
             Data(
                 Topic(

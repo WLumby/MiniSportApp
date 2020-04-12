@@ -1,9 +1,9 @@
-package com.example.minisportapp
+package com.example.minisportapp.repository.networkData
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class HTTPWrapper() {
+class HTTPWrapper {
     /**
      * Function to get data from the given URL and return it
      * Takes a http client parameter to allow mocking

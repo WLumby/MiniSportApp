@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.minisportapp.repository.SportData
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.sport_tile.view.*
 

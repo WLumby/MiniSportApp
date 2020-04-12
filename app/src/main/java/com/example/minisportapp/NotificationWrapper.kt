@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.minisportapp.repository.Item
 import com.google.gson.Gson
 
 class NotificationWrapper {

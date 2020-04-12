@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.minisportapp.repository.Item
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.sport_tile.view.*
 
 class DisplayStoryActivity : AppCompatActivity() {
 

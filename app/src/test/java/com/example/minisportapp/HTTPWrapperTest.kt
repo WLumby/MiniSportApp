@@ -1,5 +1,6 @@
 package com.example.minisportapp
 
+import com.example.minisportapp.repository.networkData.HTTPWrapper
 import okhttp3.*
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.CoreMatchers.`is`
@@ -53,7 +54,8 @@ class HTTPWrapperTest {
         `when`(mockHTTPCall.execute())
             .thenReturn(testResponse)
 
-        val wrapper = HTTPWrapper()
+        val wrapper =
+            HTTPWrapper()
         val rawData = wrapper.getRawData(mockHTTPClient, testURL)
 
         assertThat(rawData, `is`("{\"hello\":\"hi\"}"))

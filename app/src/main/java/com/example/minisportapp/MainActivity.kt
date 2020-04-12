@@ -1,6 +1,5 @@
 package com.example.minisportapp
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.minisportapp.repository.OnSportDataResultListener
+import com.example.minisportapp.repository.SportData
+import com.example.minisportapp.repository.networkData.SportDataRepositoryFactory
 import com.google.gson.Gson
-import okhttp3.OkHttpClient
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), OnSportDataResultListener {
+class MainActivity : AppCompatActivity(),
+    OnSportDataResultListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnSportDataResultListener {
     }
 
     override fun onResult(sportData: SportData) {
+        this.sportData = sportData
         val notificationWrapper = NotificationWrapper()
         val statsManager = Stats()
 
@@ -85,12 +88,13 @@ class MainActivity : AppCompatActivity(), OnSportDataResultListener {
             )
         )
 
-        statsManager.sendStats(
-            OkHttpClient(),
-            "load",
-            "data",
-            System.currentTimeMillis().toString()
-        )
+        // FIXME: this crashes with android.os.NetworkOnMainThreadException (Stats uses the httpClient on the main thread)
+//        statsManager.sendStats(
+//            OkHttpClient(),
+//            "load",
+//            "data",
+//            System.currentTimeMillis().toString()
+//        )
     }
 }
 

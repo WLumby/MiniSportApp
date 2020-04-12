@@ -2,6 +2,7 @@ package com.example.minisportapp
 
 import android.app.*
 import android.content.Context
+import com.example.minisportapp.repository.SportData
 import java.util.*
 
 class NotificationTimerTask(wrapper: NotificationWrapper, sportData: SportData, context: Context) : TimerTask() {

@@ -1,4 +1,4 @@
-package com.example.minisportapp
+package com.example.minisportapp.repository
 
 data class SportData(
     val data: Data
