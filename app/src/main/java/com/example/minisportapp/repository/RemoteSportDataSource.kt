@@ -1,22 +1,27 @@
-package com.example.minisportapp.repository.networkData
+package com.example.minisportapp.repository
 
 import android.os.AsyncTask
-import com.example.minisportapp.repository.*
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
+import kotlin.random.Random
 
-class HttpSportDataSource(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient):
+class RemoteSportDataSource(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val parser: Parser):
     SportDataSource {
-    override fun fetchSportData(url: String, onResult: (String?) -> Unit) {
-        DownloadDataAsyncTask(wrapper, httpClient, onResult).execute(url)
-    }
-}
+    override fun fetchSportData(url: String, onResult: (SportData?) -> Unit) {
+        if (Random.Default.nextBoolean()) {
+            onResult(null)
+            return
+        }
 
-object SportDataRepositoryFactory {
-    fun create() = SportDataRepository(
-        HttpSportDataSource(HTTPWrapper(), OkHttpClient()),
-        Parser(Gson())
-    )
+        DownloadDataAsyncTask(
+            wrapper,
+            httpClient
+        ) { json ->
+            json?.let {
+                onResult(parser.parseSportData(json))
+            }
+        }.execute(url)
+    }
 }
 
 class DownloadDataAsyncTask(private val wrapper: HTTPWrapper, private val httpClient: OkHttpClient, private val onResult: (String?) -> Unit) : AsyncTask<String, Int, String?>() {

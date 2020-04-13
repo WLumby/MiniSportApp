@@ -1,6 +1,6 @@
 package com.example.minisportapp
 
-import com.example.minisportapp.repository.networkData.HTTPWrapper
+import com.example.minisportapp.repository.HTTPWrapper
 import okhttp3.*
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.CoreMatchers.`is`

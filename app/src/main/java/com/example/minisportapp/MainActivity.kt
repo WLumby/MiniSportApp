@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.minisportapp.repository.OnSportDataResultListener
 import com.example.minisportapp.repository.SportData
-import com.example.minisportapp.repository.networkData.SportDataRepositoryFactory
+import com.example.minisportapp.repository.SportDataRepositoryFactory
 import com.google.gson.Gson
 import java.util.*
 
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(),
     private fun createHomepage() {
         val sportDataRepository = SportDataRepositoryFactory.create()
         sportDataRepository.listener = this
-        sportDataRepository.getAndParseSportData("https://bbc.github.io/sport-app-dev-tech-challenge/data.json")
+        sportDataRepository.provideSportData("https://bbc.github.io/sport-app-dev-tech-challenge/data.json")
     }
 
     /**
@@ -95,6 +96,10 @@ class MainActivity : AppCompatActivity(),
 //            "data",
 //            System.currentTimeMillis().toString()
 //        )
+    }
+
+    override fun onError() {
+        Toast.makeText(this, "Failed to fetch sport data.", Toast.LENGTH_LONG).show()
     }
 }
 
