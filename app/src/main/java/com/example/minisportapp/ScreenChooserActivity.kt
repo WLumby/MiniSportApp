@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.minisportapp.mvasterisk.mvc.TopicItemListMVCActivity
 import com.example.minisportapp.mvasterisk.mvp.TopicItemListMVPActivity
+import com.example.minisportapp.mvasterisk.mvvm.TopicItemListMVVMActivity
 import kotlinx.android.synthetic.main.activity_screen_chooser.*
 
 class ScreenChooserActivity : AppCompatActivity() {
@@ -21,6 +22,9 @@ class ScreenChooserActivity : AppCompatActivity() {
         }
         buttonMvc.setOnClickListener {
             startActivity(Intent(this, TopicItemListMVCActivity::class.java))
+        }
+        buttonMvvm.setOnClickListener {
+            startActivity(Intent(this, TopicItemListMVVMActivity::class.java))
         }
     }
 }
