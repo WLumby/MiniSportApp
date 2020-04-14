@@ -16,8 +16,7 @@ import com.google.gson.Gson
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(),
-    OnSportDataResultListener {
+class MainActivity : AppCompatActivity(), OnSportDataResultListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>

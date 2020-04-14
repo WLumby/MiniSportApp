@@ -12,8 +12,18 @@
         android:layout_height="wrap_content"
         android:text="Main activity" />
     <Button
+        android:id="@+id/buttonMvc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MVC activity" />
+    <Button
         android:id="@+id/buttonMvp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="MVP activity" />
+    <Button
+        android:id="@+id/buttonMvvm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MVVM activity" />
 </LinearLayout>

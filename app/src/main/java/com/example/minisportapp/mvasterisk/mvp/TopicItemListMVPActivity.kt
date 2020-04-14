@@ -1,11 +1,12 @@
-package com.example.minisportapp.mvasterisk
+package com.example.minisportapp.mvasterisk.mvp
 
 import android.os.Bundle
 import android.widget.Toast
+import com.example.minisportapp.mvasterisk.BaseMVAsteriskActivity
 import com.example.minisportapp.repository.Item
 import com.example.minisportapp.repository.SportDataRepositoryFactory
 
-class TopicItemListMVPActivity : BaseMVAsteriskActivity(), TopicItemListView {
+class TopicItemListMVPActivity : BaseMVAsteriskActivity(), TopicItemListMVPView {
 
     private lateinit var presenter: TopicItemListPresenter
 
