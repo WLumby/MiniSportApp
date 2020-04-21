@@ -8,34 +8,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.minisportapp.repository.OnSportDataResultListener
+import com.example.minisportapp.observable.Observer
 import com.example.minisportapp.repository.SportData
-import com.example.minisportapp.repository.networkData.SportDataRepositoryFactory
 import com.google.gson.Gson
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(),
-    OnSportDataResultListener {
+class MainActivity : AppCompatActivity(), Observer<SportData?> {
 
     private lateinit var recyclerView: RecyclerView
+
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-
     private lateinit var sportData: SportData
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        createHomepage()
+        val viewModel = DataRepositoryViewModel()
+        viewModel.data.observer = this
+        viewModel.attachToRepository()
     }
 
-    private fun createHomepage() {
-        val sportDataRepository = SportDataRepositoryFactory.create()
-        sportDataRepository.listener = this
-        sportDataRepository.getAndParseSportData("https://bbc.github.io/sport-app-dev-tech-challenge/data.json")
+    override fun onDestroy() {
+        super.onDestroy()
+        //todo remove yoself from the viewmodel
     }
 
     /**
@@ -59,8 +57,10 @@ class MainActivity : AppCompatActivity(),
         startActivity(intent)
     }
 
-    override fun onResult(sportData: SportData) {
-        this.sportData = sportData
+    override fun onValueChanged(value: SportData?) {
+        value?.let {
+            this.sportData = it
+        }
         val notificationWrapper = NotificationWrapper()
         val statsManager = Stats()
 
