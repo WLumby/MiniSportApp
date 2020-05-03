@@ -1,26 +1,17 @@
 package com.example.minisportapp.repository
 
-interface OnSportDataResultListener {
-    fun onResult(sportData: SportData)
-}
+import io.reactivex.rxjava3.core.Observable
 
 interface SportDataSource {
-    fun fetchSportData(url: String, onResult: (String?) -> Unit)
+    fun fetchSportData(url: String) : Observable<String>
 }
 
 class SportDataRepository(
     private val dataSource: SportDataSource,
     private val parser: Parser
 ) {
-    var listener: OnSportDataResultListener? = null
-
-    fun getAndParseSportData(url: String) {
-        dataSource.fetchSportData(url, ::onResult)
-    }
-
-    private fun onResult(result: String?) {
-        result?.let {
-            listener?.onResult(parser.parseSportData(it))
-        }
+    fun getAndParseSportData(url: String): Observable<SportData> {
+        return dataSource.fetchSportData(url)
+            .map { parser.parseSportData(it) }
     }
 }

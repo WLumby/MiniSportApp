@@ -3,6 +3,7 @@ package com.example.minisportapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,29 +12,51 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.minisportapp.observable.Observer
 import com.example.minisportapp.repository.SportData
 import com.google.gson.Gson
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.observers.DisposableObserver
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
-
-class MainActivity : AppCompatActivity(), Observer<SportData?> {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var sportData: SportData
-
+    private lateinit var viewModel: DataRepositoryViewModel
+    private lateinit var disposableObserver: DisposableObserver<SportData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewModel = DataRepositoryViewModel()
-        viewModel.data.observer = this
-        viewModel.attachToRepository()
+        viewModel = DataRepositoryViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        disposableObserver = viewModel.data.subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<SportData>() {
+                override fun onComplete() {
+                    Log.d("", "")
+                }
+
+                override fun onNext(data: SportData) {
+                    Log.d("", "")
+                    onData(data)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d("", "")
+                }
+            });
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        //todo remove yoself from the viewmodel
+        disposableObserver.dispose()
     }
 
     /**
@@ -57,7 +80,7 @@ class MainActivity : AppCompatActivity(), Observer<SportData?> {
         startActivity(intent)
     }
 
-    override fun onValueChanged(value: SportData?) {
+    private fun onData(value: SportData?) {
         value?.let {
             this.sportData = it
         }
