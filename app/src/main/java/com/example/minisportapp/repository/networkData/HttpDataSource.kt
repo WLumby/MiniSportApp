@@ -4,6 +4,7 @@ import com.example.minisportapp.repository.*
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.OkHttpClient
 
 class HttpSportDataSource(
@@ -19,7 +20,7 @@ class HttpSportDataSource(
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }
+        }.subscribeOn(Schedulers.io())
     }
 }
 
