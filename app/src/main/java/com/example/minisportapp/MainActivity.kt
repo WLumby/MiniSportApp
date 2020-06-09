@@ -8,40 +8,42 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.minisportapp.observable.Observer
+import com.example.minisportapp.observable.SportObserver
 import com.example.minisportapp.repository.SportData
 import com.google.gson.Gson
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), Observer<SportData?> {
+class MainActivity : AppCompatActivity(), SportObserver<SportData?> {
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var sportData: SportData
 
+    private lateinit var viewModel: DataRepositoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewModel = DataRepositoryViewModel()
-        viewModel.data.observer = this
+        viewModel = DataRepositoryViewModel()
         viewModel.attachToRepository()
+        viewModel.data.observe(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        //todo remove yoself from the viewmodel
+        viewModel.data.unsubscribe()
     }
 
     /**
      * Function to create and schedule a random story notification
      */
     private fun createRandomNotification(context: Context, notificationWrapper: NotificationWrapper, delay: Long, period: Long) {
-        val notificationTask = NotificationTimerTask(notificationWrapper, sportData, context)
-        Timer().schedule(notificationTask, delay, period)
+        viewModel.data.value?.also { data ->
+            val notificationTask = NotificationTimerTask(notificationWrapper, data, context)
+            Timer().schedule(notificationTask, delay, period)
+        }
     }
 
     /**
@@ -49,18 +51,21 @@ class MainActivity : AppCompatActivity(), Observer<SportData?> {
      * Starts new activity with intent of clicked story
      */
     fun onStoryClick(view: View) {
-        val serialisedItem = Gson().toJson(sportData.data.items[view.tag as Int])
+        val sportData = viewModel.data.value
+        sportData?.data?.also { data ->
+            val serialisedItem = Gson().toJson(data.items[view.tag as Int])
 
-        val intent = Intent(this, DisplayStoryActivity::class.java).apply {
-            putExtra("com.minisportapp.storydata", serialisedItem)
+            val intent = Intent(this, DisplayStoryActivity::class.java).apply {
+                putExtra("com.minisportapp.storydata", serialisedItem)
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
     }
 
-    override fun onValueChanged(value: SportData?) {
-        value?.let {
-            this.sportData = it
-        }
+    override fun onValueChanged(sportData: SportData?) {
+
+        sportData ?: return
+
         val notificationWrapper = NotificationWrapper()
         val statsManager = Stats()
 

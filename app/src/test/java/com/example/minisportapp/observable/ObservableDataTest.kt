@@ -11,20 +11,20 @@ class ObservableDataTest {
 
     @Before
     fun setup() {
-        observer = SpyObserver(null)
+        observer = SpyObserver()
     }
 
     @Test
     fun `observer is notified on change`() {
-        observed = ObservableData("Hello", observer)
+        observed = ObservableData()
 
         observed.value = "Hello World!"
 
         assertThat(observer.observedValue, `is`("Hello World!"))
     }
 
-    class SpyObserver<T>(initValue: T) : Observer<T> {
-        var observedValue: T = initValue
+    class SpyObserver<T>() : SportObserver<T> {
+        var observedValue: T? = null
         override fun onValueChanged(value: T) {
             observedValue = value
         }
